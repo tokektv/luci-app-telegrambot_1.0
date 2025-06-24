@@ -1,0 +1,4 @@
+config telegrambot 'settings'
+	option bot_token ''
+	option chat_id ''
+	option router_name 'router1'
