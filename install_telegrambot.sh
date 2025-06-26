@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # === SETTING ===
-RAW_URL="https://raw.githubusercontent.com/username/repo-name/main/luci-app-telegrambot"
+RAW_URL="https://raw.githubusercontent.com/tokektv/luci-app-telegrambot_1.0/refs/main"
 
 echo "[*] Instalasi Telegram Bot + LuCI (versi RAW)..."
 
