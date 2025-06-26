@@ -1,1 +1,4 @@
-
+config telegrambot 'config'
+	option bot_token 'YOUR_BOT_TOKEN'
+	option chat_id 'YOUR_CHAT_ID'
+	option router_id 'router01'
