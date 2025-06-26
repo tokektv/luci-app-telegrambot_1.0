@@ -1,47 +1,38 @@
 #!/bin/sh
 
-# === KONFIGURASI ===
-REPO_URL="https://https://github.com/tokektv/luci-app-telegrambot_1.0"
-PACKAGE_DIR="luci-app-telegrambot"
-TMP_DIR="/tmp/$PACKAGE_DIR"
+# === SETTING ===
+RAW_URL="https://raw.githubusercontent.com/username/repo-name/main/luci-app-telegrambot"
 
-echo "[*] Instalasi Telegram Bot + LuCI..."
+echo "[*] Instalasi Telegram Bot + LuCI (versi RAW)..."
 
-# === DEPENDENSI ===
-echo "[*] Memasang dependensi (curl, jq, luci-base)..."
+# --- PASANG DEPENDENSI ---
 opkg update
 opkg install curl jq luci-base luci-compat
 
-# === DOWNLOAD DARI GITHUB ===
-echo "[*] Mengunduh paket dari GitHub..."
-rm -rf $TMP_DIR
-git clone "$REPO_URL.git" $TMP_DIR || {
-    echo "[!] Gagal mengunduh repo dari GitHub."
-    exit 1
-}
+# --- BUAT DIREKTORI TUJUAN ---
+mkdir -p /usr/lib/lua/luci/controller
+mkdir -p /usr/lib/lua/luci/model/cbi
+mkdir -p /usr/lib/lua/luci/view/telegrambot
+mkdir -p /usr/bin
+mkdir -p /etc/init.d
+mkdir -p /etc/config
 
-# === SALIN FILE KE SISTEM ===
-echo "[*] Menyalin file LuCI dan skrip bot..."
-cp -r $TMP_DIR/root/* /
-cp -r $TMP_DIR/luasrc /usr/lib/lua/luci/
+# --- UNDUH FILE UTAMA ---
+echo "[*] Mengunduh file LuCI..."
+wget -O /usr/lib/lua/luci/controller/telegrambot.lua "$RAW_URL/luasrc/controller/telegrambot.lua"
+wget -O /usr/lib/lua/luci/model/cbi/telegrambot.lua "$RAW_URL/luasrc/model/cbi/telegrambot.lua"
+wget -O /usr/lib/lua/luci/view/telegrambot/status.htm "$RAW_URL/luasrc/view/telegrambot/status.htm"
 
-# === IZINKAN FILE EKSEKUSI ===
+echo "[*] Mengunduh skrip bot..."
+wget -O /usr/bin/telegrambot.sh "$RAW_URL/root/usr/bin/telegrambot.sh"
+wget -O /etc/init.d/telegrambot "$RAW_URL/root/etc/init.d/telegrambot"
+wget -O /etc/config/telegrambot "$RAW_URL/root/etc/config/telegrambot"
+
+# --- IZINKAN EKSEKUSI ---
 chmod +x /usr/bin/telegrambot.sh
 chmod +x /etc/init.d/telegrambot
 
-# === INISIASI CONFIG JIKA BELUM ADA ===
-CONFIG_FILE="/etc/config/telegrambot"
-if [ ! -f "$CONFIG_FILE" ]; then
-    cat <<EOF > "$CONFIG_FILE"
-config telegrambot 'config'
-	option bot_token 'ISI_TOKEN_DISINI'
-	option chat_id 'ISI_CHATID_DISINI'
-	option router_id 'router01'
-EOF
-fi
-
-# === ENABLE & START SERVICE ===
-echo "[*] Mengaktifkan dan menjalankan service bot..."
+# --- ENABLE & START SERVICE ---
 /etc/init.d/telegrambot enable
 /etc/init.d/telegrambot start
 
