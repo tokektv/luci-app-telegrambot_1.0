@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # === KONFIGURASI ===
-REPO_URL="https://github.com/username/repo-name"
+REPO_URL="https://https://github.com/tokektv/luci-app-telegrambot_1.0"
 PACKAGE_DIR="luci-app-telegrambot"
 TMP_DIR="/tmp/$PACKAGE_DIR"
 
